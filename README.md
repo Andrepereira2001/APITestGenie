@@ -5,12 +5,22 @@ This project uses LangChain and LLMs to autonomously generate TypeScript tests (
 
 ## Setup
 
-1. Install dependencies:
+1. Create a virtual environment:
+   ```
+   py -m venv venv
+   ```
+
+2. Activate the virtual environment:
+   ```
+   venv\Scripts\activate
+   ```
+
+3. Install dependencies:
    ```
    pip install -r requirements.txt
    ```
 
-2. Run the main script:
+4. Run the main script:
    ```
-   python src/main.py
+   py src/main.py
    ```
