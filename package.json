@@ -1,0 +1,14 @@
+{
+  "scripts": {
+    "test": "jest generation"
+  },
+  "dependencies": {
+    "@babel/core": "^7.27.1",
+    "@babel/preset-env": "^7.27.2",
+    "@types/jest": "^29.5.14",
+    "axios": "^1.9.0",
+    "babel-jest": "^29.7.0",
+    "jest": "^29.7.0",
+    "ts-jest": "^29.3.4"
+  }
+}

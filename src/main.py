@@ -2,6 +2,8 @@ import os
 from dotenv import load_dotenv
 import generate
 
+PETSTORE = "https://petstore.swagger.io/v2/swagger.json"
+
 def main():
     print("Welcome to LangChain Test Generator!")
     load_dotenv()  # Load environment variables from .env

@@ -3,7 +3,7 @@ Replication package for API Test Genie, an LLM based approach to generate integr
 
 This project uses LangChain and LLMs to autonomously generate TypeScript tests (Jest) for your code.
 
-## Setup
+## Setup - Generate Test
 
 1. Create a virtual environment:
    ```
@@ -23,4 +23,16 @@ This project uses LangChain and LLMs to autonomously generate TypeScript tests (
 4. Run the main script:
    ```
    py src/main.py
+   ```
+
+### Exectute Test
+
+1. Instal dependencies:
+   ```
+   npm install --save
+   ```
+
+2. Execute generated test:
+   ```
+   npm test
    ```
