@@ -1,0 +1,1 @@
+As a user of the cat-themed educational app, I want to receive a new and random cat fact every time I open the app or refresh the content, so that I can learn fun and intriguing information about cats and stay engaged with the app.

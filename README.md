@@ -20,9 +20,9 @@ This project uses LangChain and LLMs to autonomously generate TypeScript tests (
    pip install -r requirements.txt
    ```
 
-4. Run the main script:
+4. Run the main script where the \<system> can either be "catFact" or "petShop":
    ```
-   py src/main.py
+   py src/main.py <system>
    ```
 
 ### Exectute Test

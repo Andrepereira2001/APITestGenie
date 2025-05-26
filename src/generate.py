@@ -1,21 +1,12 @@
 # Handles interactions with the LLM via LangChain
 
-from langchain.llms import OpenAI
+from langchain_community.llms import OpenAI
 from langchain.prompts import ChatPromptTemplate
+import utils
 
 class Generate:
 
-    default_system_prompt = """
-As an AI coding assistant, my goal is to facilitate the creation of executable API integration tests in TypeScript.
-Many users may not be familiar with coding, so I am here to bridge the gap and help them craft tests that validate their application's business requirements.
-
-To ensure the tests are practical and meet the users' needs, I will generate integration test cases in TypeScript using the Axios and Jest libraries.
-These tests will be designed for immediate execution and will interact with the API endpoints defined in the API specification.
-
-I am expected to create more complex tests following the example:
-
-***
-import axios from 'axios';
+    test_example = """import axios from 'axios';
 
 describe('General description of the test', () => {
 test('Specific description of the test', async () => {
@@ -41,15 +32,20 @@ test('Another specific description of the test', async () => {
     // Add more tests for other scenarios
     ...                                                                        
 });  
+"""
+
+    default_system_prompt = """
+As an AI coding assistant, my goal is to facilitate the creation of executable API integration tests in TypeScript.
+Many users may not be familiar with coding, so I am here to bridge the gap and help them craft tests that validate their application's business requirements.
+
+To ensure the tests are practical and meet the users' needs, I will generate integration test cases in TypeScript using the Axios and Jest libraries.
+These tests will be designed for immediate execution and will interact with the API endpoints defined in the API specification.
+
+I am expected to create more complex tests following the example:
+
 ***
-
-When generating the test I will use existing environment variables. Following is the list of all available environment variables:
-```
-{env_description}
-```
-Each variable is denoted as `<environment name>:<description of the environment variable>`. I will load the variables that I need using the following code example:
-`process.env.<environment name>`
-
+{test_example}
+***
 
 The tests will be assessed on several key factors:
 **Executability**: The tests must run smoothly and without errors.
@@ -84,6 +80,7 @@ ENDPOINTS:
 TEST:
 \"\"\"typescript
 <3. **Craft Executable Test Code**>
+\"\"\"
 """
     
     default_user_prompt = """
@@ -112,26 +109,46 @@ Let's start!
         # Call the LLM to generate a test based on the prompt
         return self.llm(prompt)
 
-    def generate_test_with_chat_prompt(self, system_prompt: str, user_prompt: str, user_story: str, api_specification: str) -> str:
+    def generate_test_with_chat_prompt(self, user_story: str, api_specification: str,
+                                        system_prompt: str = default_system_prompt, user_prompt: str = default_user_prompt) -> str:
         """
         Generates a test using ChatPromptTemplate with system and user prompts.
         """
         content = {
             "user_story": user_story,
-            "api_specification": api_specification
+            "api_specification": api_specification,
+            "test_example": Generate.test_example
         }
+
         chat_prompt = ChatPromptTemplate.from_messages([
             ("system", system_prompt),
             ("user", user_prompt)
         ])
-        formatted_prompt = chat_prompt.format(content)
+        formatted_prompt = chat_prompt.format(**content)
+
+        utils.write_file("./test_output/prompt.txt", formatted_prompt)
+
         return self.llm(formatted_prompt)
     
-    def parse_test(self, test_code: str) -> str:
+    def parse_generation(self, generation: str) -> str:
         """
         Parses the generated test code to ensure it meets the required format.
         """
         
-        
+        #Parse requirements "REQUIREMENT:"
+        requirement_start = generation.find("REQUIREMENT:") + len("REQUIREMENT:")
+        requirement_end = generation.find("ENDPOINTS:")
 
-        return test_code
+        #Parse endpoints "ENDPOINTS:"
+        endpoints_start = requirement_end + len("ENDPOINTS:")
+        endpoints_end = generation.find("TEST:")
+
+        #Parse test "TEST:"
+        test_start = endpoints_end + len("TEST:\n\"\"\"typescript\n")
+        test_end = generation.find("\"\"\"", test_start)
+
+        requirement = generation[requirement_start:requirement_end].strip()
+        endpoints = generation[endpoints_start:endpoints_end].strip()
+        test = generation[test_start:test_end].strip()
+
+        return requirement, endpoints, test

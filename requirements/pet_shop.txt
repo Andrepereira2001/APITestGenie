@@ -1,0 +1,1 @@
+Adding a New Pet to the Store Inventory As a pet store manager, I want to be able to add new pets to the store’s inventory through the API, So that I can keep the store’s inventory up-to-date and offer a wide variety of pets to our customers.

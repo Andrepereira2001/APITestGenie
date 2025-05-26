@@ -1,6 +1,6 @@
 {
   "scripts": {
-    "test": "jest generation"
+    "test": "jest test_output"
   },
   "dependencies": {
     "@babel/core": "^7.27.1",
