@@ -6,12 +6,12 @@ import utils
 
 PETSHOP = {
     "api": "https://petstore.swagger.io/v2/swagger.json",
-    "requirement": "./requirements/pet_shop.txt"
+    "user_story": "./user_stories/pet_shop.txt"
 }
 
 CATFACT = {
     "api": "https://catfact.ninja/docs?api-docs.json",
-    "requirement": "./requirements/cat_fact.txt"
+    "user_story": "./user_stories/cat_fact.txt"
 }
 
 def main():
@@ -31,10 +31,10 @@ def main():
     else:
         config = PETSHOP
 
-    requirement = utils.read_file(config["requirement"])
+    user_story = utils.read_file(config["user_story"])
     api_spec = utils.fetch_json(config["api"])
     
-    generation = generate_instance.generate_test_with_chat_prompt(user_story=requirement, api_specification=api_spec)
+    generation = generate_instance.generate_test_with_chat_prompt(user_story=user_story, api_specification=api_spec)
     _, _, test = generate_instance.parse_generation(generation=generation)
 
     utils.write_file("./test_output/test.ts", test)
