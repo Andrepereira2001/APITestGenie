@@ -1,6 +1,6 @@
 # Handles interactions with the LLM via LangChain
 
-from langchain_community.llms import OpenAI
+from langchain_openai import ChatOpenAI
 from langchain.prompts import ChatPromptTemplate
 import utils
 
@@ -72,15 +72,14 @@ I will also provide a brief list of steps to reach the correct test environment 
 Make sure to explain any property that is unclear. Minimize any other prose.
 
 Document your generation using the following format, and only provide information related to the generation step specified in the placeholder.
-```
+
 REQUIREMENT:
 <1. **Clarifying the Business Requirement**>
 ENDPOINTS:
 <2. **Listing Endpoints**>
 TEST:
-\"\"\"typescript
+```typescript
 <3. **Craft Executable Test Code**>
-\"\"\"
 """
     
     default_user_prompt = """
@@ -103,7 +102,9 @@ Let's start!
 
     def __init__(self, api_key: str):
         self.api_key = api_key
-        self.llm = OpenAI(openai_api_key=api_key)
+        self.llm = ChatOpenAI(
+            model="gpt-4o",
+            openai_api_key=api_key)
 
     def generate_test(self, prompt: str) -> str:
         # Call the LLM to generate a test based on the prompt
@@ -128,7 +129,7 @@ Let's start!
 
         utils.write_file("./test_output/prompt.txt", formatted_prompt)
 
-        return self.llm(formatted_prompt)
+        return self.llm.invoke(formatted_prompt).content
     
     def parse_generation(self, generation: str) -> str:
         """
@@ -144,11 +145,11 @@ Let's start!
         endpoints_end = generation.find("TEST:")
 
         #Parse test "TEST:"
-        test_start = endpoints_end + len("TEST:\n\"\"\"typescript\n")
-        test_end = generation.find("\"\"\"", test_start)
+        test_start = generation.find("TEST:") + len("TEST:\n```typescript\n")
+        test_end = generation.find("```", test_start)
 
         requirement = generation[requirement_start:requirement_end].strip()
         endpoints = generation[endpoints_start:endpoints_end].strip()
-        test = generation[test_start:test_end].strip()
+        test = generation[test_start:test_end].strip().strip("`")
 
         return requirement, endpoints, test

@@ -35,8 +35,9 @@ def main():
     api_spec = utils.fetch_json(config["api"])
     
     generation = generate_instance.generate_test_with_chat_prompt(user_story=user_story, api_specification=api_spec)
-    _, _, test = generate_instance.parse_generation(generation=generation)
+    utils.write_file("./test_output/generation.txt", generation)
 
+    _, _, test = generate_instance.parse_generation(generation=generation)
     utils.write_file("./test_output/test.ts", test)
 
 if __name__ == "__main__":

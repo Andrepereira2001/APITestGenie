@@ -17,7 +17,7 @@ This project uses LangChain and LLMs to autonomously generate TypeScript tests (
 
 3. Install dependencies:
    ```
-   pip install -r requirements.txt
+   py -m pip install -r requirements.txt
    ```
 
 4. Run the main script where the \<system> can either be "catFact" or "petShop":
