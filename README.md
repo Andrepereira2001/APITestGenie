@@ -5,7 +5,7 @@ This project uses LangChain and LLMs to autonomously generate TypeScript tests (
 
 ## Project strucuture
 
-In the replication package we present a structured way to test two web services, (i) [PetShop](`https://petstore.swagger.io/`) and (ii) [CatFact](https://catfact.ninja/)
+In the replication package we present a structured way to test two web services, (i) [PetShop](https://petstore.swagger.io/) and (ii) [CatFact](https://catfact.ninja/)
 
 The `./user_stories` folder contain two example Business Requirements used by the package to generate an executable test script.
 The API spefication are retrieved directly from the available documentaiton on the web. 
