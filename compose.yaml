@@ -1,0 +1,15 @@
+name: api-test-genie
+
+services:
+  gen:
+    build:
+      target: generate
+    env_file: .env
+    volumes:
+      - ./test_output:/usr/src/app/test_output:z
+
+  exec:
+    build:
+      target: execute
+    volumes:
+      - ./test_output:/usr/src/app/test_output
