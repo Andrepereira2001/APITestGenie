@@ -40,5 +40,7 @@ def main():
     _, _, test = generate_instance.parse_generation(generation=generation)
     utils.write_file("./test_output/test.ts", test)
 
+    print("Test generated, you may now execute it!")
+
 if __name__ == "__main__":
     main()
