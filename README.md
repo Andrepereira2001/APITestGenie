@@ -23,67 +23,25 @@ CATFACT = {
 }
 ```
 
-## Configuration
+## Usage
 
-The replication package uses node `v10.5.0` and python `v3.12.4`. 
+The project uses docker and docker-compose, ensuring a reproducible enviroment across different operating systems.
+Please, ensure that you have both tools installed in your system before proceeding.
 
-It can be executed both in Windows and macOS following the respective instructions:
-
-### Windows
-
-#### Setup Environment
-
-1. Create a virtual environment:
-   ```
-   py -m venv venv
-   ```
-
-2. Activate the virtual environment:
-   ```
-   venv\Scripts\activate
-   ```
-
-3. Install dependencies:
-   ```
-   py -m pip install -r requirements.txt
-   ```
-
-4. Specify the OPENAI_API_KEY key:
-    - Open the `.env` file.
+1. Specify the `OPENAI_API_KEY` key: - Open the `.env` file.
     - Add a valid `open_api_key` as an environment variable
 
-#### Generate Test
+2. Generate a test for a `web_service`, which can either be `catFact` or `petShop`:
 
-1. Run the main script where the `\<web_service>` can either be `catFact` or `petShop`:
-   ```
-   py src/main.py <web_service>
-   ```
+```sh
+docker-compose run --rm gen <web_service>
+```
 
-#### Exectute Test
+3. Execute the generated tests in the jest environment.
 
-1. Install dependencies:
-   ```
-   npm install --save
-   ```
-
-2. Execute generated test:
-   ```
-   npm test
-   ```
-
-### MacOs
-
-#### Setup Environment
-
-TBD
-
-#### Generate Test
-
-TBD
-
-#### Exectute Test
-
-TBD
+```sh
+docker-compose run --rm exec
+```
 
 
 ## Generation Output
