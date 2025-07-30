@@ -56,5 +56,5 @@ All the information provided to the LLM will be available in the `test_output` f
 Thanks to everyone that contributed to this project, especially:
 
 Bruno Lima (Advisor) https://scholar.google.pt/citations?user=8W81bQUAAAAJ&hl=en
+
 João Pascoal Faria (Co-Advisor) https://scholar.google.com/citations?user=osCQrkQAAAAJ&hl=en
-Miguel Rodrigues (Code contribution) http://github.com/mbrdg
