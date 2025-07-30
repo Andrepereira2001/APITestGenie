@@ -7,6 +7,7 @@ services:
     env_file: .env
     volumes:
       - ./test_output:/usr/src/app/test_output:z
+      - ./user_stories:/usr/src/app/user_stories:z
 
   exec:
     build:

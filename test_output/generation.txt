@@ -1,54 +1,67 @@
 REQUIREMENT:
-1. **Clarifying the Business Requirement**: The business requirement is for a pet store manager, who needs to add new pets to the store's inventory via an API. The goal is to ensure that the inventory remains current and diverse to meet customer needs. The test will validate the API endpoint's capability to add a new pet by sending a simulated request with pet data and verifying a successful response.
+1. **Clarifying the Business Requirement**:
+   - The business requirement involves adding a new pet to the store's inventory using the API. This will ensure the store inventory is up-to-date with new additions, providing a variety of pets to customers. 
+   - The test will verify if a unique pet is successfully created and if the created pet can be fetched using its ID.
 
 ENDPOINTS:
 2. **Listing Endpoints**:
-   - `POST /pet`: Adds a new pet to the store.
-     - **Request Object**: Should include a body with a `Pet` object that contains attributes like `id` (optional), `name` (required), `photoUrls` (required - array of strings), `category` (optional object with `id` and `name`), `tags` (optional array of objects with `id` and `name`), and `status` (optional - enum of `available`, `pending`, `sold`).
-     - **Response Object**: No specific object is required, but should expect a 405 status code indicating invalid input if the request body is incorrect.
+   - **POST** `/pet`: This endpoint is used to add a new pet to the store. 
+     - **Request Object Type**: `Pet`
+     - **Key Properties Required**: 
+       - `name`: string (name of the pet)
+       - `photoUrls`: array of strings (URLs of pet photos)
+     - **Response**: None specified for success in documentation, but standard response should be a success code or object.
+   - **GET** `/pet/{petId}`: This endpoint retrieves a pet by its ID.
+     - **Path Parameter**: `petId` (integer, must match the pet ID used during creation).
+     - **Response**: Type `Pet` object containing the pet's details.
 
 TEST:
 ```typescript
 import axios from 'axios';
 
-describe('Add a New Pet to the Store Inventory', () => {
-  test('Successfully add a new pet', async () => {
-    const url = 'https://petstore.swagger.io/v2/pet';
-    // Prepared test data
+describe('Adding a New Pet to the Store', () => {
+  const baseUrl = 'https://petstore.swagger.io/v2';
+  let createdPetId: number;
+
+  test('should create a unique pet', async () => {
     const newPet = {
-      id: 12345678,
       name: 'Fluffy',
-      photoUrls: ['https://example.com/photo1.jpg'],
+      photoUrls: ['http://example.com/photo1'],
       category: { id: 1, name: 'Dogs' },
-      tags: [{ id: 1, name: 'friendly' }],
-      status: 'available',
+      tags: [{ id: 1, name: 'Friendly' }],
+      status: 'available'
     };
 
-    // Make request with generated data
-    const response = await axios.post(url, newPet);
+    const response = await axios.post(`${baseUrl}/pet`, newPet, {
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    });
 
-    // Validate response of request
+    // Assuming the response contains the created Pet object
     expect(response.status).toBe(200);
-    expect(response.data).toHaveProperty('id', newPet.id);
-    expect(response.data).toHaveProperty('name', newPet.name);
-    expect(response.data).toHaveProperty('status', newPet.status);
+    expect(response.data).toHaveProperty('id');
+    createdPetId = response.data.id; // Store the ID for further use
+    expect(response.data.name).toBe('Fluffy');
   });
 
-  test('Fail to add a pet with invalid data', async () => {
-    const url = 'https://petstore.swagger.io/v2/pet';
-    // Prepared incorrect test data (missing required 'name' field)
-    const invalidPet = {
-      id: 12345679,
-      photoUrls: ['https://example.com/photo2.jpg']
-    };
-
-    try {
-      // Attempt to make a request with invalid data
-      await axios.post(url, invalidPet);
-    } catch (error) {
-      // Validate response for invalid input
-      expect(error.response.status).toBe(405);
+  test('should retrieve the created pet by ID', async () => {
+    if (!createdPetId) {
+      throw new Error('Failed to store the created pet ID');
     }
+
+    const response = await axios.get(`${baseUrl}/pet/${createdPetId}`, {
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    });
+
+    expect(response.status).toBe(200);
+    expect(response.data.id).toBe(createdPetId);
+    expect(response.data.name).toBe('Fluffy');
   });
 });
 ```
+- This script first adds a pet named 'Fluffy' with a specific category and tags via the POST endpoint.
+- It then verifies by confirming status and data in the POST response.
+- Using the created pet's ID, it verifies that the pet can be fetched successfully through a GET request.

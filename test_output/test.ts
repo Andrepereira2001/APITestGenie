@@ -1,42 +1,44 @@
 import axios from 'axios';
 
-describe('Add a New Pet to the Store Inventory', () => {
-  test('Successfully add a new pet', async () => {
-    const url = 'https://petstore.swagger.io/v2/pet';
-    // Prepared test data
+describe('Adding a New Pet to the Store', () => {
+  const baseUrl = 'https://petstore.swagger.io/v2';
+  let createdPetId;
+
+  test('should create a unique pet', async () => {
     const newPet = {
-      id: 12345678,
       name: 'Fluffy',
-      photoUrls: ['https://example.com/photo1.jpg'],
+      photoUrls: ['http://example.com/photo1'],
       category: { id: 1, name: 'Dogs' },
-      tags: [{ id: 1, name: 'friendly' }],
-      status: 'available',
+      tags: [{ id: 1, name: 'Friendly' }],
+      status: 'available'
     };
 
-    // Make request with generated data
-    const response = await axios.post(url, newPet);
+    const response = await axios.post(`${baseUrl}/pet`, newPet, {
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    });
 
-    // Validate response of request
+    // Assuming the response contains the created Pet object
     expect(response.status).toBe(200);
-    expect(response.data).toHaveProperty('id', newPet.id);
-    expect(response.data).toHaveProperty('name', newPet.name);
-    expect(response.data).toHaveProperty('status', newPet.status);
+    expect(response.data).toHaveProperty('id');
+    createdPetId = response.data.id; // Store the ID for further use
+    expect(response.data.name).toBe('Fluffy');
   });
 
-  test('Fail to add a pet with invalid data', async () => {
-    const url = 'https://petstore.swagger.io/v2/pet';
-    // Prepared incorrect test data (missing required 'name' field)
-    const invalidPet = {
-      id: 12345679,
-      photoUrls: ['https://example.com/photo2.jpg']
-    };
-
-    try {
-      // Attempt to make a request with invalid data
-      await axios.post(url, invalidPet);
-    } catch (error) {
-      // Validate response for invalid input
-      expect(error.response.status).toBe(405);
+  test('should retrieve the created pet by ID', async () => {
+    if (!createdPetId) {
+      throw new Error('Failed to store the created pet ID');
     }
+
+    const response = await axios.get(`${baseUrl}/pet/${createdPetId}`, {
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    });
+
+    expect(response.status).toBe(200);
+    expect(response.data.id).toBe(createdPetId);
+    expect(response.data.name).toBe('Fluffy');
   });
 });

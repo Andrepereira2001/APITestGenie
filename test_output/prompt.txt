@@ -76,7 +76,12 @@ Following is the business requirement that you will be testing.
 This narrative will guide the creation of your tests and provide the context needed to determine the data for API requests.
 Here is the business requirement for your reference:
 ***
-Adding a New Pet to the Store Inventory As a pet store manager, I want to be able to add new pets to the store’s inventory through the API, So that I can keep the store’s inventory up-to-date and offer a wide variety of pets to our customers.
+Adding a New Pet to the Store Inventory 
+As a pet store manager, I want to be able to add a new pet to the store’s inventory through the API, So that I can keep the store’s inventory up-to-date and offer a wide variety of pets to our customers.
+
+Acceptance Criteria:
+- Make sure that the a unique pet is created
+- Make sure that the user can view the created pet
 ***
 Next, you will review an API specification that details the available endpoints with the requests/response data structure.
 The test you develop should validate the correct functioning of these endpoints
